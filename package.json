@@ -1,0 +1,37 @@
+{
+  "name": "ts-adt",
+  "version": "1.0.0",
+  "description": "Typescript implementation of commonly used algebraic types",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "tape": "^4.6.0",
+    "typescript": "^2.0.2"
+  },
+  "scripts": {
+    "test": "ts-node test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stevekane/ts-adt.git"
+  },
+  "keywords": [
+    "typescript",
+    "algebraic",
+    "data",
+    "type",
+    "adt",
+    "monad",
+    "future",
+    "task",
+    "continuation",
+    "ether",
+    "maybe"
+  ],
+  "author": "Steve Kane",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stevekane/ts-adt/issues"
+  },
+  "homepage": "https://github.com/stevekane/ts-adt#readme"
+}

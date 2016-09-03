@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "noImplicitReturns": true,
+    "strictNullChecks": true,
+    "noImplicitAny": true
+  }
+}
