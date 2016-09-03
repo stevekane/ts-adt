@@ -18,6 +18,6 @@ export function flatMap<A, B> (fn: (a: A) => IFuture<B>, mA: IFuture<A>): IFutur
   return new Future((rO) => mA.fork((rI) => fn(rI).fork(rO)))
 }
 
-export function unit <A> (a: A): IFuture<A> {
+export function unit<A> (a: A): IFuture<A> {
   return new Future((r) => setTimeout(r, MIN_TIME, a))
 }

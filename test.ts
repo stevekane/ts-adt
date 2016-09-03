@@ -1,9 +1,9 @@
 /// <reference path="./typings/index.d.ts" />
 
 import * as test from 'tape'
-import { Maybe, Either, Future /*, Continuation, IO */ } from './src/main'
+import { Maybe, Either, Future /*, Continuation */, IO } from './src/main'
 
-test('Maybe', (t) => {
+test('Maybe', t => {
   const m = Maybe.fmap((v: number) => v + 5, new Maybe.Just(5))
   const n = Maybe.fmap((v: number) => v + 5, new Maybe.Nothing)
   const m2 = Maybe.flatMap((v: number) => new Maybe.Just(v + 5), new Maybe.Just(5))
@@ -18,7 +18,7 @@ test('Maybe', (t) => {
   t.end()
 })
 
-test('Either', (t) => {
+test('Either', t => {
   const m = Either.fmap((v: number) => v + 5, new Either.Success(5))
   const n = Either.fmap((v: number) => v + 5, new Either.Failure('Error'))
   const m2 = Either.flatMap((v: number) => new Either.Success(v + 5), new Either.Success(5))
@@ -33,9 +33,21 @@ test('Either', (t) => {
   t.end()
 })
 
-test('Future', (t) => {
+test('Future', t => {
   Future.unit(5).fork(a => t.same(a, 5))
   Future.fmap((v: number) => v + 5, Future.unit(0)).fork(a => t.same(a, 5))
   Future.flatMap((v: number) => Future.unit(v + 5), Future.unit(5)).fork(a => t.same(a, 10))
   t.end()
+})
+
+test('IO', t => {
+  function processInfo (): IO.IIO<NodeJS.Process> {
+    return new IO.IO(() => process)
+  }
+
+  t.same(IO.unit(5).run(), 5)
+  t.same(IO.fmap((v: number) => v + 5, IO.unit(5)).run(), 10)
+  t.same(IO.flatMap((v: number) => IO.unit(v + 5), IO.unit(5)).run(), 10)
+  t.same(processInfo().run().env.PWD, process.env.PWD)
+  t.end() 
 })
