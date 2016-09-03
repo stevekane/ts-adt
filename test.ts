@@ -35,8 +35,8 @@ test('Either', t => {
 
 test('Future', t => {
   Future.unit(5).fork(a => t.same(a, 5))
-  Future.fmap((v: number) => v + 5, Future.unit(0)).fork(a => t.same(a, 5))
-  Future.flatMap((v: number) => Future.unit(v + 5), Future.unit(5)).fork(a => t.same(a, 10))
+  Future.fmap(v => v + 5, Future.unit(0)).fork(a => t.same(a, 5))
+  Future.flatMap(v => Future.unit(v + 5), Future.unit(5)).fork(a => t.same(a, 10))
   t.end()
 })
 
@@ -46,8 +46,8 @@ test('IO', t => {
   }
 
   t.same(IO.unit(5).run(), 5)
-  t.same(IO.fmap((v: number) => v + 5, IO.unit(5)).run(), 10)
-  t.same(IO.flatMap((v: number) => IO.unit(v + 5), IO.unit(5)).run(), 10)
+  t.same(IO.fmap(v => v + 5, IO.unit(5)).run(), 10)
+  t.same(IO.flatMap(v => IO.unit(v + 5), IO.unit(5)).run(), 10)
   t.same(processInfo().run().env.PWD, process.env.PWD)
   t.end() 
 })

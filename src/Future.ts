@@ -11,13 +11,13 @@ export class Future<A> implements IFuture<A> {
 }
 
 export function fmap<A, B> (fn: (a: A) => B, mA: IFuture<A>): IFuture<B> {
-  return new Future((rO) => mA.fork((rI) => rO(fn(rI))))
+  return new Future(rO => mA.fork(rI => rO(fn(rI))))
 }
 
 export function flatMap<A, B> (fn: (a: A) => IFuture<B>, mA: IFuture<A>): IFuture<B> {
-  return new Future((rO) => mA.fork((rI) => fn(rI).fork(rO)))
+  return new Future(rO => mA.fork(rI => fn(rI).fork(rO)))
 }
 
 export function unit<A> (a: A): IFuture<A> {
-  return new Future((r) => setTimeout(r, MIN_TIME, a))
+  return new Future(r => setTimeout(r, MIN_TIME, a))
 }
