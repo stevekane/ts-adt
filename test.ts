@@ -1,7 +1,7 @@
 /// <reference path="./typings/index.d.ts" />
 
 import * as test from 'tape'
-import { Maybe, Either } from './src/main'
+import { Maybe, Either, Future /*, Continuation, IO */ } from './src/main'
 
 test('Maybe', (t) => {
   const m = Maybe.fmap((v: number) => v + 5, new Maybe.Just(5))
@@ -30,5 +30,12 @@ test('Either', (t) => {
   t.true(m2 instanceof Either.Success)
   t.true(n2 instanceof Either.Failure && n2.message === 'Err')
   t.true(m3 instanceof Either.Success && m3.val === 5)
+  t.end()
+})
+
+test('Future', (t) => {
+  Future.unit(5).fork(a => t.same(a, 5))
+  Future.fmap((v: number) => v + 5, Future.unit(0)).fork(a => t.same(a, 5))
+  Future.flatMap((v: number) => Future.unit(v + 5), Future.unit(5)).fork(a => t.same(a, 10))
   t.end()
 })
