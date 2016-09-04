@@ -17,14 +17,14 @@ export class Nothing implements INothing {
 
 export type Maybe<A> = IJust<A> | INothing
 
-export function fmap<A, B> ( fn: (a: A) => B, mA: Maybe<A> ): Maybe<B> {
+export function fmap<A, B> (fn: (a: A) => B, mA: Maybe<A>): Maybe<B> {
   switch ( mA.kind ) {
     case 'Just':    return new Just(fn(mA.val)) 
     case 'Nothing': return new Nothing
   }
 }
 
-export function flatMap<A, B> ( fn: (a: A) => Maybe<B>, mA: Maybe<A> ): Maybe<B> {
+export function flatMap<A, B> (mA: Maybe<A>, fn: (a: A) => Maybe<B>): Maybe<B> {
   switch ( mA.kind ) {
     case 'Just':    return fn(mA.val)
     case 'Nothing': return new Nothing

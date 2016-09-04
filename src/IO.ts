@@ -10,7 +10,7 @@ export function fmap<A, B> (fn: (a: A) => B, ioA: IIO<A>): IIO<B> {
   return new IO(() => fn(ioA.run()))
 }
 
-export function flatMap<A, B> (fn: (a: A) => IIO<B>, ioA: IIO<A>): IIO<B> {
+export function flatMap<A, B> (ioA: IIO<A>, fn: (a: A) => IIO<B>): IIO<B> {
   return fn(ioA.run())
 }
 
