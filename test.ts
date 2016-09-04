@@ -1,7 +1,7 @@
 /// <reference path="./typings/index.d.ts" />
 
 import * as test from 'tape'
-import { Maybe, Either, Future , Continuation, IO } from './src/main'
+import { Maybe, Either, Future , IO, Continuation } from './src/main'
 
 test('Maybe', t => {
   const m = Maybe.fmap((v: number) => v + 5, new Maybe.Just(5))
@@ -41,13 +41,19 @@ test('Future', t => {
 })
 
 test('IO', t => {
-  function processInfo (): IO.IIO<NodeJS.Process> {
-    return new IO.IO(() => process)
-  }
+  const processInfo = (): IO.IIO<NodeJS.Process> => new IO.IO(() => process)
 
   t.same(IO.unit(5).run(), 5)
   t.same(IO.fmap(v => v + 5, IO.unit(5)).run(), 10)
   t.same(IO.flatMap(IO.unit(5), v => IO.unit(v + 5)).run(), 10)
   t.same(processInfo().run().env.PWD, process.env.PWD)
   t.end() 
+})
+
+test('Continuation', t => {
+  const u5 = Continuation.unit(5)
+  //const cB: Co
+
+  u5.run(v => t.same(v, 5))
+  t.end()
 })
