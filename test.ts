@@ -51,11 +51,13 @@ test('IO', t => {
 })
 
 test('Continuation', t => {
-  const { unit, flatMap /*, fmap */ } = Continuation
+  const { unit, flatMap, fmap } = Continuation
   const u5 = unit(5)
-  const cB = flatMap(unit(5), v => unit(v + 5))
+  const fMapped = fmap(v => v + 5, unit(5))
+  const flatMapped = flatMap(unit(5), v => unit(v + 5))
 
   u5.run(v => t.same(v, 5))
-  cB.run(v => t.same(v, 10))
+  fMapped.run(v => t.same(v, 10))
+  flatMapped.run(v => t.same(v, 10))
   t.end()
 })
