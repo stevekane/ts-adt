@@ -1,5 +1,5 @@
 import * as test from 'tape'
-import { satisfy, unit, flatMap } from '../src/Parser'
+import { satisfy, unit, flatMap, fmap } from '../src/Parser'
 
 function isAlpha (s: string): boolean {
   const cc = s.charCodeAt(0)
@@ -19,9 +19,12 @@ test('Parser', t => {
       c2 => unit([ c1, c2 ])))
   const dblRes = doubleChar('abc')
   const badDblRes = doubleChar('a1')
+  const fmapped = fmap(a => a + '!', satisfy(isAlpha))
+  const fmappedRes = fmapped('dad')
 
   unitResult.success && t.same(unitResult.val, 5)
   dblRes.success && t.same(dblRes.val, [ 'a', 'b' ])
   !badDblRes.success && t.same(badDblRes.message, 'isAlpha did not pass at 1')
+  fmappedRes.success && t.same(fmappedRes.val, 'd!')
   t.end()
 })

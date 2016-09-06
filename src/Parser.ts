@@ -25,9 +25,9 @@ export function unit<A> (a: A): Parser<A> {
   return (s: string) => new Result(a, s)
 }
 
-// export function fmap<A, B> (f: (a: A) => B, pa: Parser<A>): Parser<B> {
-//   return flatMap(pa, a => unit(f(a)))
-// }
+export function fmap<A, B> (f: (a: A) => B, pa: Parser<A>): Parser<B> {
+  return flatMap(pa, a => unit(f(a)))
+}
 
 export function flatMap<A, B> (pa: Parser<A>, f: (a: A) => Parser<B>): Parser<B> {
   return (s: string): IResult<B> | IErr => {
