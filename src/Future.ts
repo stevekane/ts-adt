@@ -1,23 +1,34 @@
-const MIN_TIME = 1 //ms
-
 type ForkFn<T> = (r: (t: T) => void) => void
 
-export interface IFuture<A> {
-  fork: ForkFn<A>
+interface Functor <A> {
+  map<B> (fn: (a: A) => B): Functor<B>
 }
 
-export class Future<A> implements IFuture<A> { 
+interface Monad<A> extends Functor<A> {
+  of<B>(b: B): Monad<B>
+  chain<B>(fn: (a: A) => Monad<B>): Monad<B>
+}
+
+export class Future<A> implements Monad<A> { 
   constructor(public fork: ForkFn<A>) {}
-}
 
-export function fmap<A, B> (fn: (a: A) => B, mA: IFuture<A>): IFuture<B> {
-  return new Future(rO => mA.fork(rI => rO(fn(rI))))
-}
+  static unit<B> (b: B): Future<B> {
+    return new Future(r => r(b))
+  }
 
-export function flatMap<A, B> (mA: IFuture<A>, fn: (a: A) => IFuture<B>): IFuture<B> {
-  return new Future(rO => mA.fork(rI => fn(rI).fork(rO)))
-}
+  map<B>(fn: (a: A) => B): Future<B> {
+    const mA = this
 
-export function unit<A> (a: A): IFuture<A> {
-  return new Future(r => setTimeout(r, MIN_TIME, a))
+    return new Future(rO => mA.fork(rI => rO(fn(rI))))
+  }
+
+  chain<B>(fn: (a: A) => Future<B>): Future<B> {
+    const mA = this 
+
+    return new Future(rO => mA.fork(rI => fn(rI).fork(rO)))
+  }
+
+  of<B> (b: B): Future<B> {
+    return new Future(r => r(b))
+  }
 }
