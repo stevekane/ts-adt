@@ -1,3 +1,8 @@
+export interface Monad<A, B> {
+  of<B>(b: B) => Monad<B>
+  chain<B>(fn: (a: A) => Monad<B>) => Monad<B>
+}
+
 export interface IJust<A> {
   kind: 'Just',
   val: A
@@ -6,10 +11,11 @@ export interface INothing {
   kind: 'Nothing' 
 }
 
-export class Just<A> implements IJust<A> {
+export class Just<A, B> implements IJust<A> Monad<A, B> {
   kind: 'Just' = 'Just'
   constructor(public val: A) {} 
 }
+
 export class Nothing implements INothing {
   kind: 'Nothing' = 'Nothing' 
   constructor() {}

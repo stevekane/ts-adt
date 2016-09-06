@@ -1,13 +1,6 @@
+import { Monad } from './TypeClassInterfaces'
+
 type ForkFn<T> = (r: (t: T) => void) => void
-
-interface Functor <A> {
-  map<B> (fn: (a: A) => B): Functor<B>
-}
-
-interface Monad<A> extends Functor<A> {
-  of<B>(b: B): Monad<B>
-  chain<B>(fn: (a: A) => Monad<B>): Monad<B>
-}
 
 export class Future<A> implements Monad<A> { 
   constructor(public fork: ForkFn<A>) {}
