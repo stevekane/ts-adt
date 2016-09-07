@@ -56,10 +56,10 @@ function AdultOutro (firstName: string): Future<number> {
 }
 
 const patientId = 5
-const program = fetchPatientData(patientId)                                                                                                                      // Fetch patient data
-                .chain(initialPatientData => Intro()                                                                                                             // Show the intro sequence
-                .chain(_ => WorkSheet(initialPatientData))                                                                                                       // Ask patient to update their info
-                .chain(updatedPatientData => (updatedPatientData.age < 18 ? MinorOutro(updatedPatientData.firstName) : AdultOutro(updatedPatientData.firstName)) // Choose correct outro based on age
-                .chain(_2 => Future.unit({ patientData: updatedPatientData, risks: [] }))))                                                                      // Gather up collected data and return as result of running the program
+const program = fetchPatientData(patientId)
+                .chain(initialPatientData => Intro()
+                .chain(_ => WorkSheet(initialPatientData))
+                .chain(updatedPatientData => (updatedPatientData.age < 18 ? MinorOutro(updatedPatientData.firstName) : AdultOutro(updatedPatientData.firstName))
+                .chain(_2 => Future.unit({ patientData: updatedPatientData, risks: [] }))))
 
 program.fork(console.log.bind(console))
