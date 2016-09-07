@@ -75,6 +75,6 @@ const program = fetchPatientData(patientId)
                 .chain(_ => WorkSheet(initialPatientData)
                 .chain(updatedPatientData => DrugUseRatings()
                 .chain(drugUseRatings => (updatedPatientData.age < 18 ? MinorOutro(updatedPatientData.firstName) : AdultOutro(updatedPatientData.firstName))
-                .chain(_2 => Future.unit({ patientData: updatedPatientData, risks: [] }))))))
+                .chain(_2 => Future.unit({ patientData: updatedPatientData, risks: drugUseRatings.sort((a, b) => a.value - b.value) }))))))
 
 program.fork(console.log.bind(console))
