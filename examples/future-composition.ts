@@ -2,15 +2,6 @@
 
 import { Future } from '../src/Future'
 
-/*
-  In this world, all entities are Futures and are interface-wise
-  indistinguishable from one-another.
-
-  Since Future<T> implements Monad<T> we can compose Futures
-  out of other Futures to build up modules, sections, control flows
-  programs, editions, etc
-*/
-
 type PatientData = {
   firstName: string
   lastName: string
@@ -124,7 +115,7 @@ const program
       .chain(_                  => WorkSheet(initialPatientData)
         .chain(updatedPatientData => DrugUseRatings()
           .chain(drugUseRatings     => sequence(drugUseRatings.sort(byValue).filter(onlyHigh).map(DrugRisk))
-            .chain(_2                 => (updatedPatientData.age < 18 ? MinorOutro : AdultOutro)(updatedPatientData.firstName)
-              .chain(_3                 => Future.unit({ patientData: updatedPatientData, highRisks: drugUseRatings.filter(onlyHigh) })))))))
+            .chain(_                  => (updatedPatientData.age < 18 ? MinorOutro : AdultOutro)(updatedPatientData.firstName)
+              .chain(_                  => Future.unit({ patientData: updatedPatientData, highRisks: drugUseRatings.filter(onlyHigh) })))))))
 
 program.fork(log.bind(console))
