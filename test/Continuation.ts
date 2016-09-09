@@ -1,5 +1,5 @@
 import * as test from 'tape'
-import { ICont, unit, fmap, flatMap } from '../src/Continuation'
+import { Cont } from '../src/Continuation'
 
 test('Continuation', t => {
   type KeyCode = number
@@ -18,13 +18,13 @@ test('Continuation', t => {
   }
   type WindowCallback = IResize | IKeyDown
 
-  const u5 = unit(5)
-  const fMapped = fmap(v => v + 5, unit(5))
-  const flatMapped = flatMap(unit(5), v => unit(v + 5))
-  const userCallbacks = (app: App, cb: WindowCallback): ICont<App> => {
+  const u5 = Cont.unit(5)
+  const fMapped = Cont.unit(5).map(v => v + 5)
+  const flatMapped = Cont.unit(5).chain(v => Cont.unit(v + 5))
+  const userCallbacks = (app: App, cb: WindowCallback): Cont<App> => {
     switch ( cb.kind ) {
-      case 'resize':  return unit(Object.assign(app, { dimensions: cb.dimensions }))
-      case 'keydown': return unit(Object.assign(app, { keyCode: cb.keyCode }))
+      case 'resize':  return Cont.unit(Object.assign(app, { dimensions: cb.dimensions }))
+      case 'keydown': return Cont.unit(Object.assign(app, { keyCode: cb.keyCode }))
     }
   }
   const app = {

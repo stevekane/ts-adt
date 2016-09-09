@@ -1,21 +1,25 @@
+import { Monad } from './TypeClassInterfaces'
+
 type RunFn<A> = (f: (a: A) => void) => void
 
-export interface ICont<A> { 
-  run: RunFn<A>
-}
-
-export class Cont<A> implements ICont<A> {
+export class Cont<A> implements Monad<A> {
   constructor(public run: RunFn<A>) {}
-}
 
-export function unit<A> (a: A): ICont<A> {
-  return new Cont((f: (a: A) => void) => f(a))
-}
+  static unit<A> (a: A): Cont<A> {
+    return new Cont((f: (a: A) => void) => f(a))
+  }
 
-export function flatMap<A, B> (cA: ICont<A>, f: (a: A) => ICont<B>): ICont<B> {
-  return new Cont(r => cA.run(a => f(a).run(r)))
-}
+  chain<B> (f: (a: A) => Cont<B>): Cont<B> {
+    const cA = this
 
-export function fmap<A, B> (f: (a: A) => B, cA: ICont<A>): ICont<B> {
-  return flatMap(cA, a => unit(f(a)))
+    return new Cont(r => cA.run(a => f(a).run(r)))
+  }
+
+  map<B> (f: (a: A) => B): Cont<B> {
+    return this.chain(a => Cont.unit(f(a)))
+  }
+
+  of<B> (b: B): Cont<B> {
+    return new Cont((f: (b: B) => void) => f(b)) 
+  }
 }
