@@ -1,12 +1,12 @@
 import * as test from 'tape'
-import { IIO, IO, unit, fmap, flatMap } from '../src/IO'
+import { IO } from '../src/IO'
 
 test('IO', t => {
-  const processInfo = (): IIO<NodeJS.Process> => new IO(() => process)
+  const processInfo = (): IO<NodeJS.Process> => IO.unit(process)
 
-  t.same(unit(5).run(), 5)
-  t.same(fmap(v => v + 5, unit(5)).run(), 10)
-  t.same(flatMap(unit(5), v => unit(v + 5)).run(), 10)
+  t.same(IO.unit(5).run(), 5)
+  // t.same(IO.unit(5).map(v => v + 5).run()), 10)
+  t.same(IO.unit(5).chain(v => IO.unit(v + 5)).run(), 10)
   t.same(processInfo().run().env.PWD, process.env.PWD)
   t.end() 
 })

@@ -1,19 +1,21 @@
-export interface IIO<A> {
-  run: () => A
-}
+import { Monad } from './TypeClassInterfaces'
 
-export class IO<A> implements IIO<A> {
+export class IO<A> implements Monad<A> {
   constructor(public run: () => A) {}
-}
 
-export function fmap<A, B> (fn: (a: A) => B, ioA: IIO<A>): IIO<B> {
-  return new IO(() => fn(ioA.run()))
-}
+  static unit<B> (b: B): IO<B> {
+    return new IO(() => b) 
+  }
 
-export function flatMap<A, B> (ioA: IIO<A>, fn: (a: A) => IIO<B>): IIO<B> {
-  return fn(ioA.run())
-}
+  of<B> (b: B): IO<B> {
+    return new IO(() => b)
+  }
 
-export function unit<A> (a: A): IIO<A> {
-  return new IO(() => a)
+  chain<B> (f: (a: A) => IO<B>): IO<B> {
+    return f(this.run())
+  }
+
+  map<B> (f: (a: A) => B): IO<B> {
+    return this.chain(a => IO.unit(f(a)))
+  }
 }
