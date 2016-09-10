@@ -1,41 +1,34 @@
-export interface Monad<A, B> {
-  of<B>(b: B) => Monad<B>
-  chain<B>(fn: (a: A) => Monad<B>) => Monad<B>
-}
+import { Monad } from './TypeClassInterfaces'
 
-export interface IJust<A> {
-  kind: 'Just',
-  val: A
-}
-export interface INothing {
-  kind: 'Nothing' 
-}
+abstract class MBase<A> implements Monad<A> {
+  of<B> (b: B): Maybe<B> {
+    return new Just(b) 
+  }
 
-export class Just<A, B> implements IJust<A> Monad<A, B> {
-  kind: 'Just' = 'Just'
-  constructor(public val: A) {} 
-}
+  chain<B> (fn: (a: A) => Maybe<B>): Maybe<B> {
+    if ( this instanceof Just ) return fn(this.val)
+    else                        return new Nothing
+  }
 
-export class Nothing implements INothing {
-  kind: 'Nothing' = 'Nothing' 
-  constructor() {}
-}
-
-export type Maybe<A> = IJust<A> | INothing
-
-export function fmap<A, B> (fn: (a: A) => B, mA: Maybe<A>): Maybe<B> {
-  switch ( mA.kind ) {
-    case 'Just':    return new Just(fn(mA.val)) 
-    case 'Nothing': return new Nothing
+  map<B> (f: (a: A) => B): Maybe<B> {
+    return this.chain(a => unit(f(a)))
   }
 }
 
-export function flatMap<A, B> (mA: Maybe<A>, fn: (a: A) => Maybe<B>): Maybe<B> {
-  switch ( mA.kind ) {
-    case 'Just':    return fn(mA.val)
-    case 'Nothing': return new Nothing
-  } 
+export class Just<A> extends MBase<A> {
+  kind: 'Just' = 'Just'
+  val: A
+  constructor(val: A) {
+    super()
+    this.val = val
+  }
 }
+
+export class Nothing<A> extends MBase<A> {
+  kind: 'Nothing' = 'Nothing' 
+}
+
+export type Maybe<A> = Just<A> | Nothing<A>
 
 export function unit<A> (a: A): Maybe<A> {
   return new Just(a) 
