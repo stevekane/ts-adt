@@ -14,10 +14,10 @@ export class TransitionWriter<A, B> implements ITransitionWriter<A, B> {
   constructor(public record: RecordFn<A>, public snapshot: SnapshotFn<B>, public fork: ForkFn<A, B>) {}
 }
 
-// export function flatMap<A, B> (mA: IFuture<A>, fn: (a: A) => IFuture<B>): IFuture<B> {
-//   return new Future(rO => mA.fork(rI => fn(rI).fork(rO)))
+// export function flatMap<L, A, B> (mA: ITransitionWriter<L, A>, fn: (a: A) => ITransitionWriter<L, B>): ITransitionWriter<L, B> {
+//   return new TransitionWriter(rO => mA.fork(rI => fn(rI).fork(rO)))
 // }
-// 
+
 // export function unit<A, B> (a: A): ITransitionWriter<A, B> {
 //   return new TransitionWriter(r => setTimeout(r, MIN_TIME, b))
 // }
