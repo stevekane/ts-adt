@@ -1,4 +1,4 @@
-type RunFn<A> = (f: (a: A) => void) => void
+export type RunFn<A> = (f: (a: A) => void) => void
 
 export interface ICont<A> { 
   run: RunFn<A>
